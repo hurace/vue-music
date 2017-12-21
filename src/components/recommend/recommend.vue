@@ -1,34 +1,34 @@
 <template>
     <div class="recommend" ref="recommend">
         <!--<scroll ref="scroll" class="recommend-content">-->
-            <div>
-                <div v-if="recommends.length" class="slider-wrapper" ref="sliderWrapper">
-                    <slider>
-                        <div v-for="item in recommends">
-                            <a :href="item.linkUrl">
-                                <img :src="item.picUrl"/>
-                            </a>
+        <div>
+            <div v-if="recommends.length" class="slider-wrapper" ref="sliderWrapper">
+                <slider>
+                    <div v-for="item in recommends">
+                        <a :href="item.linkUrl">
+                            <img :src="item.picUrl"/>
+                        </a>
+                    </div>
+                </slider>
+            </div>
+            <div class="recommend-list">
+                <h1 class="list-title">热门歌单推荐</h1>
+                <ul>
+                    <li click="selectItem(item)" class="item">
+                        <div class="icon">
+                            <img width="60" height="60">
                         </div>
-                    </slider>
-                </div>
-                <div class="recommend-list">
-                    <h1 class="list-title">热门歌单推荐</h1>
-                    <ul>
-                        <li click="selectItem(item)" class="item">
-                            <div class="icon">
-                                <img width="60" height="60">
-                            </div>
-                            <div class="text">
-                                <h2 class="name"></h2>
-                                <p class="desc"></p>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+                        <div class="text">
+                            <h2 class="name"></h2>
+                            <p class="desc"></p>
+                        </div>
+                    </li>
+                </ul>
             </div>
-            <div class="loading-container">
-                <!--<loading></loading>-->
-            </div>
+        </div>
+        <div class="loading-container">
+            <!--<loading></loading>-->
+        </div>
         <!--</scroll>-->
         <router-view></router-view>
     </div>
@@ -36,7 +36,7 @@
 
 <script type="text/ecmascript-6">
   import Slider from 'base/slider/slider'
-  import { getRecommend } from 'api/recommend'
+  import { getRecommend, getDisList } from 'api/recommend'
   import { ERR_OK } from 'api/config'
 
   export default {
@@ -50,12 +50,20 @@
     },
     created () {
       this._getRecommend()
+      this._getDiscList()
     },
     methods: {
       _getRecommend () {
         getRecommend().then((res) => {
           if (ERR_OK === res.code) {
             this.recommends = res.data.slider
+          }
+        })
+      },
+      _getDiscList () {
+        getDisList().then((res) => {
+          if (ERR_OK === res.code) {
+            console.log(res)
           }
         })
       }

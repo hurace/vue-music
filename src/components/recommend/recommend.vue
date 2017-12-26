@@ -36,7 +36,7 @@
 
 <script type="text/ecmascript-6">
   import Loading from 'base/Loading/loading'
-  import Scroll from 'base/Scroll/scroll'
+  import Scroll from 'base/scroll/scroll'
   import Slider from 'base/slider/slider'
   import { getRecommend, getDiscList } from 'api/recommend'
   import { ERR_OK } from 'api/config'

@@ -35,7 +35,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import Loading from 'base/Loading/loading'
+  import Loading from 'base/loading/loading'
   import Scroll from 'base/scroll/scroll'
   import Slider from 'base/slider/slider'
   import { getRecommend, getDiscList } from 'api/recommend'

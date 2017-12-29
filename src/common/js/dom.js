@@ -35,11 +35,10 @@ let vendor = (() => {
   }
 
   for (let key in transformNames) {
-    if (elementStyle[transformNames] !== undefined) {
+    if (elementStyle[transformNames[key]] !== undefined) {
       return key
     }
   }
-
   return false
 })()
 

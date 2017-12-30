@@ -192,7 +192,6 @@
         if (!this.playing) {
           this.togglePlaying()
         }
-
         this.songReady = false
       },
       prev () {
@@ -284,6 +283,7 @@
         }
         this.$nextTick(() => {
           this.$refs.audio.play()
+          this.currentSong.getLyric()
         })
       },
       playing (newPlaying) {

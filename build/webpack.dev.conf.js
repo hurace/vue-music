@@ -16,10 +16,6 @@ const app = express()
 
 var apiRouters = express.Router()
 
-apiRouters.get('/getDiscList', function (req, res) {
-
-})
-
 app.use('/api', apiRouters)
 
 const devWebpackConfig = merge(baseWebpackConfig, {
@@ -47,7 +43,7 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     watchOptions: {
       poll: config.dev.poll,
     },
-    before(app) {
+    before (app) {
       app.get('/api/getDiscList', (req, res) => {
         var url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
 
@@ -59,6 +55,29 @@ const devWebpackConfig = merge(baseWebpackConfig, {
           params: req.query,
         }).then((response) => {
           res.json(response.data)
+        }).catch((e) => {
+          console.log(e)
+        })
+      })
+      app.get('/api/lyric', (req, res) => {
+        var url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg'
+
+        axios.get(url, {
+          headers: {
+            referer: 'https://c.y.qq.com',
+            host: 'c.y.qq.com'
+          },
+          params: req.query
+        }).then((response) => {
+          var ret = response.data
+          if (typeof res === 'string') {
+            var reg = /^\w+\({[^()]+}\)$/
+            var matches = ret.match(reg)
+            if (matches) {
+              ret = JSON.parse(matches[1])
+            }
+          }
+          res.json(ret)
         }).catch((e) => {
           console.log(e)
         })

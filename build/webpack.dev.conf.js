@@ -70,8 +70,8 @@ const devWebpackConfig = merge(baseWebpackConfig, {
           params: req.query
         }).then((response) => {
           var ret = response.data
-          if (typeof res === 'string') {
-            var reg = /^\w+\({[^()]+}\)$/
+          if (typeof ret === 'string') {
+            var reg = /^\w+\(({[^()]+})\)$/
             var matches = ret.match(reg)
             if (matches) {
               ret = JSON.parse(matches[1])

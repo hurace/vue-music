@@ -45,11 +45,16 @@ export default new Router({
           component: SingerDetail
         }
       ]
-
     },
     {
       path: '/search',
-      component: Search
+      component: Search,
+      children: [
+        {
+          path: ':id',
+          component: SingerDetail
+        }
+      ]
     }
   ]
 })

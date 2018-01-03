@@ -29,7 +29,7 @@
                             </div>
                         </div>
                         <div class="playing-lyric-wrapper">
-                            <div class="playing-lyric">{{palyingLyric}}</div>
+                            <div class="playing-lyric">{{playingLyric}}</div>
                         </div>
                     </div>
                     <scroll class="middle-r" ref="lyricList" :data="currentLyric && currentLyric.lines">
@@ -89,11 +89,12 @@
                         <i @click.stop="togglePlaying" class="icon-mini" :class="miniIcon"></i>
                     </progress-circle>
                 </div>
-                <div class="control">
+                <div class="control" @click.stop="showPlaylist">
                     <i class="icon-playlist"></i>
                 </div>
             </div>
         </transition>
+        <playlist ref="playlist"></playlist>
         <audio ref="audio"
                :src="currentSong.url"
                @timeupdate="updateTime"
@@ -114,6 +115,7 @@
   import { shuffle } from 'common/js/util'
   import Lyric from 'lyric-parser'
   import Scroll from 'base/scroll/scroll'
+  import Playlist from 'components/playlist/playlist'
 
   const transform = prefixStyle('transform')
   const transitionDuration = prefixStyle('tranditionDuration')
@@ -122,7 +124,8 @@
     components: {
       ProgressBar,
       ProgressCircle,
-      Scroll
+      Scroll,
+      Playlist
     },
     data () {
       return {
@@ -131,13 +134,16 @@
         currentLyric: null,
         currentLineNum: 0,
         currentShow: 'cd',
-        palyingLyric: ''
+        playingLyric: ''
       }
     },
     created () {
       this.touch = {}
     },
     methods: {
+      showPlaylist () {
+        this.$refs.playlist.show()
+      },
       back () {
         this.setFullScreen(false)
       },

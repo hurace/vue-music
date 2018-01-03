@@ -2,6 +2,7 @@
     <scroll class="suggest"
             :data="result"
             :pullup="pullup"
+            :refresh="refresh"
             :beforeScroll="beforeScroll"
             @scrollToEnd="searchMore"
             @beforeScroll="listScroll"
@@ -117,6 +118,9 @@
       },
       listScroll () {
         this.$emit('listScroll')
+      },
+      refresh () {
+        this.$refs.suggest.refresh()
       },
       _checkMore (data) {
         const song = data.song

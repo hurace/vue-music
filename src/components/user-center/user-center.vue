@@ -1,11 +1,12 @@
 <template>
     <transition name="slide">
         <div class="user-center">
-            <div class="back">
+            <div class="back" @click="back">
                 <i class="icon-back"></i>
             </div>
             <div class="switches-wrapper">
-                <switches @switch="selectItem" :currentIndex="currentIndex" :switches="switches">
+                <switches @switch="selectItem" :currentIndex="currentIndex" :switches="switches"></switches>
+                <div class="list-wrapper">
                     <scroll ref="favoriteList" class="list-scroll" v-if="currentIndex===0" :data="favoriteList">
                         <div class="list-inner">
                             <song-list :songs="favoriteList" @select="selectSong"></song-list>
@@ -16,13 +17,13 @@
                             <song-list :songs="playHistory" @select="selectSong"></song-list>
                         </div>
                     </scroll>
-                </switches>
+                </div>
             </div>
-            <div ref="playBtn" class="play-btn">
+            <div ref="playBtn" class="play-btn" @click="random">
                 <i class="icon-play"></i>
                 <span class="text">随机播放全部</span>
             </div>
-            <div class="list-wrapper" ref="listWrapper"></div>
+            <no-result :title="noResultDesc" v-show="noResult"></no-result>
         </div>
     </transition>
 </template>
@@ -31,14 +32,18 @@
   import Switches from 'base/switches/switches'
   import Scroll from 'base/scroll/scroll'
   import SongList from 'base/song-list/song-list'
+  import NoResult from 'base/no-result/no-result'
   import Song from 'common/js/song'
   import { mapGetters, mapActions } from 'vuex'
+  import { playerMixin } from 'common/js/mixin'
 
   export default {
+    mixins: [playerMixin],
     components: {
       Switches,
       Scroll,
-      SongList
+      SongList,
+      NoResult
     },
     data () {
       return {
@@ -50,23 +55,59 @@
       }
     },
     computed: {
+      noResult () {
+        if (this.currentIndex === 0) {
+          return !this.favoriteList
+        } else {
+          return !this.playHistory
+        }
+      },
+      noResultDesc () {
+        if (this.currentIndex === 0) {
+          return '暂无搜藏歌曲'
+        } else {
+          return '最近未播放歌曲'
+        }
+      },
       ...mapGetters([
         'favoriteList',
         'playHistory'
       ])
     },
     methods: {
+      handlePlaylist (playlist) {
+        const bottom = playlist.length > 0 ? '60px' : ''
+
+        this.$refs.listWrapper.stype.bottom = bottom
+
+        this.$refs.favoriteList && this.$refs.favoriteList.refresh()
+        this.$refs.playList && this.$refs.playList.refresh()
+      },
       selectItem (index) {
-        console.log(this.currentIndex)
-        console.log(this.favoriteList)
-        console.log(this.playHistory)
         this.currentIndex = index
       },
       selectSong (song) {
+        console.log(song)
         this.insertSong(new Song(song))
       },
+      back () {
+        this.$router.back()
+      },
+      random () {
+        let list = this.currentIndex === 0 ? this.favoriteList : this.playHistory
+        if (!list.length) {
+          return
+        }
+        list = list.map((song) => {
+          return new Song(song)
+        })
+        this.randomPlay({
+          list
+        })
+      },
       ...mapActions([
-        'insertSong'
+        'insertSong',
+        'randomPlay'
       ])
     }
   }
